@@ -32,32 +32,109 @@ fetch('./env.json')
     async function upload() {
       const fileInput = document.getElementById("file");
       // Save file input to IPFS
-      const data = fileInput.files[0];
-      const file = new Moralis.File(data.name, data);
-      await file.saveIPFS();
+    const data = fileInput.files[0];
+    const file = new Moralis.File(data.name, data);
+    await file.saveIPFS();
 
       console.log(file.ipfs(), file.hash())
-    }
-
-    async function store() {
       let options = {
-        contractAddress: "0x7aAda96933305Ee57859917E8cebd6446f196b53",
-        functionName: "retrieve",
+        contractAddress: "0x6f1Ffe39171c4F4f9F7d005537F5096aaB338a5A",
+        functionName: "createToken",
         abi: [
           {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
             "inputs": [
               {
-                "internalType": "uint256",
-                "name": "_favouriteNumber",
-                "type": "uint256"
+                "indexed": true,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
               },
               {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
+                "indexed": true,
+                "internalType": "address",
+                "name": "approved",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
               }
             ],
-            "name": "addPerson",
+            "name": "Approval",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+              }
+            ],
+            "name": "ApprovalForAll",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "name": "Transfer",
+            "type": "event"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "name": "approve",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -65,12 +142,135 @@ fetch('./env.json')
           {
             "inputs": [
               {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+              {
                 "internalType": "uint256",
-                "name": "_favouriteNumber",
+                "name": "",
                 "type": "uint256"
               }
             ],
-            "name": "store",
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "tokenURI",
+                "type": "string"
+              }
+            ],
+            "name": "createToken",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "name": "getApproved",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+              }
+            ],
+            "name": "isApprovedForAll",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "name",
+            "outputs": [
+              {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "name": "ownerOf",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "name": "safeTransferFrom",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -78,17 +278,76 @@ fetch('./env.json')
           {
             "inputs": [
               {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes",
+                "name": "_data",
+                "type": "bytes"
+              }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+              }
+            ],
+            "name": "setApprovalForAll",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+              }
+            ],
+            "name": "supportsInterface",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [
+              {
                 "internalType": "string",
                 "name": "",
                 "type": "string"
-              }
-            ],
-            "name": "nameToFavouriteNumber",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
               }
             ],
             "stateMutability": "view",
@@ -98,20 +357,15 @@ fetch('./env.json')
             "inputs": [
               {
                 "internalType": "uint256",
-                "name": "",
+                "name": "tokenId",
                 "type": "uint256"
               }
             ],
-            "name": "people",
+            "name": "tokenURI",
             "outputs": [
               {
-                "internalType": "uint256",
-                "name": "favouriteNumber",
-                "type": "uint256"
-              },
-              {
                 "internalType": "string",
-                "name": "name",
+                "name": "",
                 "type": "string"
               }
             ],
@@ -119,67 +373,63 @@ fetch('./env.json')
             "type": "function"
           },
           {
-            "inputs": [],
-            "name": "person",
-            "outputs": [
+            "inputs": [
               {
-                "internalType": "uint256",
-                "name": "favouriteNumber",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
               },
               {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
               }
             ],
-            "stateMutability": "view",
+            "name": "transferFrom",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
           },
           {
-            "inputs": [],
-            "name": "retrieve",
-            "outputs": [
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
               {
                 "internalType": "uint256",
-                "name": "",
+                "name": "tokenId",
                 "type": "uint256"
               }
             ],
-            "stateMutability": "view",
+            "name": "transferToken",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
           }
         ],
         params: {
-          // _favouriteNumber: 9
+          tokenURI: file.ipfs()
         },
         msgValue: Moralis.Units.ETH(0.0)
       }
       let result = await Moralis.executeFunction(options);
-      const number = parseInt(result._hex);
-      console.log(number);
-      const Ticket = Moralis.Object.extend("Ticket");
-      const ticket = new Ticket();
-
-      ticket.set("number", number);
-      ticket.set("ownerName", "Aashrit");
-      ticket.set("active", true);
-
-      ticket.save()
-        .then((ticket) => {
-          // Execute any logic that should take place after the object is saved.
-          console.log(ticket.id);
-          alert('New object created with objectId: ' + ticket.id);
-        }, (error) => {
-          // Execute any logic that should take place if the save fails.
-          // error is a Moralis.Error with an error code and message.
-          alert('Failed to create new object, with error code: ' + error.message);
-        });
+      console.log(result);
     }
 
     document.getElementById("btn-login").onclick = login;
     document.getElementById("btn-logout").onclick = logOut;
-    document.getElementById("btn-store").onclick = store;
     document.getElementById("btn-upload").onclick = upload;
   })
   .catch(error => console.log(error));
