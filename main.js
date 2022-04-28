@@ -38,7 +38,7 @@ fetch('./env.json')
 
       console.log(file.ipfs(), file.hash())
       let options = {
-        contractAddress: "0x6f1Ffe39171c4F4f9F7d005537F5096aaB338a5A",
+        contractAddress: "0xbbC53e183eDdBA39d723E66074CcE518c606Bfe6",
         functionName: "createToken",
         abi: [
           {
