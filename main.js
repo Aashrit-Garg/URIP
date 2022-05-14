@@ -14,6 +14,7 @@ fetch('./env.json')
           signingMessage: "Log in using Moralis",
         })
           .then(function (user) {
+            document.getElementById("current-user").innerHTML = user.get("ethAddress");
             console.log("logged in user:", user);
             console.log(user.get("ethAddress"));
           })
@@ -32,11 +33,12 @@ fetch('./env.json')
     async function upload() {
       const fileInput = document.getElementById("file");
       // Save file input to IPFS
-    const data = fileInput.files[0];
-    const file = new Moralis.File(data.name, data);
-    await file.saveIPFS();
+      const data = fileInput.files[0];
+      const file = new Moralis.File(data.name, data);
+      await file.saveIPFS();
 
-      console.log(file.ipfs(), file.hash())
+      document.getElementById("ipfs-link").innerHTML = file.ipfs();
+      console.log(file.ipfs(), file.hash());
       let options = {
         contractAddress: "0xbbC53e183eDdBA39d723E66074CcE518c606Bfe6",
         functionName: "createToken",
@@ -424,8 +426,23 @@ fetch('./env.json')
         },
         msgValue: Moralis.Units.ETH(0.0)
       }
-      let result = await Moralis.executeFunction(options);
-      console.log(result);
+      await Moralis.executeFunction(options).then((result) => {
+        console.log(result);
+        // Save file reference to Moralis
+        const mints = new Moralis.Object("Mints");
+        mints.set("name", "Pug");
+        mints.set("ipfs", file);
+        mints.set("urip", "sample metadata");
+        mints.set("transaction", result.hash);
+        mints.save().then(
+          (mint) => {
+            console.log(mint.id);
+          },
+          (error) => {
+            console.log(error);
+          },
+        );
+      });
     }
 
     document.getElementById("btn-login").onclick = login;
