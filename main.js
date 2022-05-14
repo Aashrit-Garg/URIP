@@ -30,6 +30,26 @@ fetch('./env.json')
       console.log("logged out");
     }
 
+    async function fetch() {
+      // Retrieve file
+      const query = new Moralis.Query("URIPTokens");
+      query.equalTo("tokenId", "5");
+      query.find().then(function ([application]) {
+        const hash = application.get("transaction_hash");
+        document.getElementById("certificate").innerHTML = hash;
+        console.log("Certificate Hash", hash);
+        const mints = new Moralis.Query("Mints");
+        mints.equalTo("transaction", hash);
+        mints.find().then(function ([tokenIPFS]) {
+          const ipfs = tokenIPFS.get("ipfs").ipfs();
+          const metadata = tokenIPFS.get("urip");
+          document.getElementById("fetch-ipfs-link").innerHTML = ipfs;
+          document.getElementById("metadata").innerHTML = metadata;
+          console.log("IPFS", ipfs);
+        });
+      });
+    }
+
     async function upload() {
       const fileInput = document.getElementById("file");
       // Save file input to IPFS
@@ -40,7 +60,7 @@ fetch('./env.json')
       document.getElementById("ipfs-link").innerHTML = file.ipfs();
       console.log(file.ipfs(), file.hash());
       let options = {
-        contractAddress: "0xbbC53e183eDdBA39d723E66074CcE518c606Bfe6",
+        contractAddress: "0xa550983721b016611112edf9f24AEce3765683e0",
         functionName: "createToken",
         abi: [
           {
@@ -448,5 +468,6 @@ fetch('./env.json')
     document.getElementById("btn-login").onclick = login;
     document.getElementById("btn-logout").onclick = logOut;
     document.getElementById("btn-upload").onclick = upload;
+    document.getElementById("btn-fetch").onclick = fetch;
   })
   .catch(error => console.log(error));
