@@ -1,10 +1,18 @@
 /* Moralis init code */
 fetch('./env.json')
   .then(response => response.json())
-  .then(data => {
+  .then(async data => {
     const serverUrl = data.env.MORALIS_SERVER_URL;
     const appId = data.env.MORALIS_APPLICATION_ID;
     Moralis.start({ serverUrl, appId });
+
+    let query = new Moralis.Query('Tokens');
+    let subscription = await query.subscribe();
+    console.log('subscribed');
+    subscription.on('create', (object) => {
+      console.log('object created');
+      console.log(object);
+    });
 
     /* Authentication code */
     async function login() {
@@ -33,8 +41,9 @@ fetch('./env.json')
     async function fetch() {
       // Retrieve file
       const query = new Moralis.Query("URIPTokens");
-      query.equalTo("tokenId", "5");
+      query.equalTo("tokenId", "14");
       query.find().then(function ([application]) {
+        console.log(application);
         const hash = application.get("transaction_hash");
         document.getElementById("certificate").innerHTML = hash;
         console.log("Certificate Hash", hash);
@@ -47,6 +56,10 @@ fetch('./env.json')
           document.getElementById("metadata").innerHTML = metadata;
           console.log("IPFS", ipfs);
         });
+      });
+      let subscription = await query.subscribe();
+      subscription.on('update', (object) => {
+        console.log('object updated');
       });
     }
 
